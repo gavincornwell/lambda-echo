@@ -16,4 +16,4 @@ Resources:
           Type: Api
           Properties:
             Path: /lambdaProxyEcho
-            Method: get
+            Method: ANY

@@ -11,8 +11,16 @@ module.exports.handler = (event, context, callback) => {
       context: context
   };
 
+  var statusCode = 200;
+
+  if (event.httpMethod === "POST") {
+    statusCode = 201;
+  } else if (event.httpMethod === "DELETE") {
+    statusCode = 204;
+  }
+
   var response = {
-      statusCode: 200,
+      statusCode: statusCode,
       body: JSON.stringify(responseBody)
   };
 
