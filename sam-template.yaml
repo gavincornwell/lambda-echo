@@ -2,18 +2,28 @@ AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: Set of lambda functions that echo input from API Gateway
 Resources:
-  lambdaProxy:
+  EchoLambda:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: lambda-proxy-echo-service.handler
+      Handler: proxy-echo-service.handler
       Runtime: nodejs4.3
       CodeUri: ./src
       Description: Function to echo an API Gateway call using lambda proxy mode
       MemorySize: 128
       Timeout: 3
       Events:
-        GetResource:
+        EchoResource:
           Type: Api
           Properties:
-            Path: /lambdaProxyEcho
+            Path: /echo
             Method: ANY
+        EchoPathResource:
+          Type: Api
+          Properties:
+            Path: /echo/{proxy+}
+            Method: ANY
+Outputs:
+  ApiURL:
+    Description: The deployed API URL
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod
