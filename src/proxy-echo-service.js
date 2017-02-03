@@ -11,12 +11,26 @@ module.exports.handler = (event, context, callback) => {
       context: context
   };
 
-  var statusCode = 200;
+  // look for a status code on the request
+  var statusCode = null;
+  if (event.queryStringParameters) {
+    statusCode = event.queryStringParameters.statusCode;
+  }
 
-  if (event.httpMethod === "POST") {
-    statusCode = 201;
-  } else if (event.httpMethod === "DELETE") {
-    statusCode = 204;
+  if (statusCode) {
+    // if a status code has been provided use it, unless it's not a number!
+    if (isNaN(statusCode)) {
+      statusCode = 200;
+    }
+  } else {
+    statusCode = 200;
+
+    // change default status code depending on method
+    if (event.httpMethod === "POST") {
+      statusCode = 201;
+    } else if (event.httpMethod === "DELETE") {
+      statusCode = 204;
+    }
   }
 
   var response = {
